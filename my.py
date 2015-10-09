@@ -16,10 +16,15 @@ IMAGE_PATH = '/home/ramin/insta-crawler/insta_crawler/media/selfie/'
 RESULT_PATH = os.getcwd() + '/result/'
 LANDMARK_PATH = os.getcwd() + '/landmark/'
 
-client = MongoClient()
-db = client['selfie']
+#client = MongoClient()
+#db = client['selfie']
 
-media_list = [  media['_id'] for media  in db.media_model.find()]
+from os import listdir
+from os.path import isfile, join
+
+media_list = [ f.split('.')[0] for f in listdir(IMAGE_PATH)]
+
+
 
 accounts = list()
 
@@ -31,7 +36,7 @@ def init():
 		f = open('facepp.cfg', 'r')
 		for line in f:
 			q.push('(' + line.strip() + ')')
-			f.close()
+		f.close()
 
 
 def get_access_token():
@@ -56,14 +61,17 @@ def request_data(media_id):
 
 
 init()
+
 th_list = list()
 counter = 0
 for media in media_list:
 	counter+=1
-	if len(th_list) == 5:
+	if len(th_list) == 8:
 		for th in th_list:
 			th.join()
+		th_list = list()
 	th = threading.Thread(target=request_data , args=[media])
+	th_list.append(th)
 	th.start()
 	if counter %20 == 0:
 		time.sleep(1)
