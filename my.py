@@ -31,7 +31,7 @@ def init():
 		f = open('facepp.cfg', 'r')
 		for line in f:
 			q.push('(' + line.strip() + ')')
-			f.close()
+		f.close()
 
 
 def get_access_token():
@@ -59,15 +59,22 @@ init()
 th_list = list()
 counter = 0
 for media in media_list:
-	counter+=1
-	if len(th_list) == 5:
-		for th in th_list:
-			th.join()
-	th = threading.Thread(target=request_data , args=[media])
-	th.start()
-	if counter %20 == 0:
-		time.sleep(1)
-	print counter
+	try:
+		counter+=1
+		if counter<40:
+			continue
+		if len(th_list) == 8:
+			for th in th_list:
+				th.join()
+			th_list = list()
+		th = threading.Thread(target=request_data , args=[media])
+		th.start()
+		if counter %20 == 0:
+			time.sleep(1)
+		print counter
+	except APIError,x:
+		f = open('error' , 'a')
+		f.write(media,x.code)
 		
 	
 
