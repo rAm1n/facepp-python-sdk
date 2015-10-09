@@ -11,16 +11,18 @@ accounts = list()
 def init():
 	global accounts
 	q = Queue('facepp')
-	f = open('facepp.cfg' , 'r')
-	for line in f:
-		accounts.append(tuple(line.strip().split(',')))
-		q.push(tuple(line.strip().split(',')))
-	f.close()
+	if not len(q):
+		f = open('facepp.cfg' , 'r')
+		for line in f:
+			accounts.append(tuple(line.strip().split(',')))
+			q.push(tuple(line.strip().split(',')))
+		f.close()
 
 
 
 def get_access_token():
-	pass
+	q = Queue('facepp')
+	return q.rpoplpush('facepp' , 'facepp')
 
 def request_data(media_id):
 	global IMAGE_PATH,RESULT_PATH		
