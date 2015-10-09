@@ -16,10 +16,15 @@ IMAGE_PATH = '/home/ramin/insta-crawler/insta_crawler/media/selfie/'
 RESULT_PATH = os.getcwd() + '/result/'
 LANDMARK_PATH = os.getcwd() + '/landmark/'
 
-client = MongoClient()
-db = client['selfie']
+#client = MongoClient()
+#db = client['selfie']
 
-media_list = [  media['_id'] for media  in db.media_model.find()]
+from os import listdir
+from os.path import isfile, join
+
+media_list = [ f.split('.')[0] for f in listdir(IMAGE_PATH)]
+
+
 
 accounts = list()
 
@@ -56,6 +61,7 @@ def request_data(media_id):
 
 
 init()
+
 th_list = list()
 counter = 0
 for media in media_list:
@@ -75,6 +81,7 @@ for media in media_list:
 	except APIError,x:
 		f = open('error' , 'a')
 		f.write(media,x.code)
+
 		
 	
 
