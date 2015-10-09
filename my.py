@@ -19,7 +19,7 @@ LANDMARK_PATH = os.getcwd() + '/landmark/'
 client = MongoClient()
 db = client['selfie']
 
-media_list = [ for media['_id'] in db.media_model.find()]
+media_list = [  media['_id'] for media  in db.media_model.find()]
 
 accounts = list()
 
@@ -28,10 +28,10 @@ def init():
 	global accounts
 	q = Queue('facepp')
 	if not len(q):
-	f = open('facepp.cfg', 'r')
-	for line in f:
-	q.push('(' + line.strip() + ')')
-	f.close()
+		f = open('facepp.cfg', 'r')
+		for line in f:
+			q.push('(' + line.strip() + ')')
+			f.close()
 
 
 def get_access_token():
